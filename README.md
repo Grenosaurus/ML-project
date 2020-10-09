@@ -8,4 +8,6 @@ Program is called by selecting first correct directory and correctly named datas
 Program is runned in the following method after going to the folder where the program is in your OS shell:
  - If Windows -> python .\solarEfficiency.py
  - If Linux -> python3 solarEfficiency.py
+Also check that you have the needed datasets.
 
+Programs algorithms can be used for plotting other kind of datasets if wanted.
