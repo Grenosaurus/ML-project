@@ -1,0 +1,5 @@
+Python verion 3
+
+Needed dependencies:
+ - Matplotlib
+ - Numpy
