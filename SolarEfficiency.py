@@ -6,6 +6,9 @@
 # Python packets
 import numpy as np
 import matplotlib.pyplot as plt
+import sklearn as skl
+
+from sklearn.cluster import KMeans
 
 
 # Constant value
@@ -50,7 +53,7 @@ for i in range(1, 100):
                 max_efficiency = voltage_efficiency = current_efficiency = power_efficiency = 0
                 
                 # Splitting the datasets values to their specific variables
-                for k in range(0, len(solar_in) - 1):
+                for k in range(0, len(solar_in) - 1): # -1 is set hr'ere to read the full dataset as it gets error in the last empty lines
                     solar_line = solar_in[k].split(None, 2)
 
                     voltage = float(solar_line[0]) # Solar cell voltage
@@ -80,7 +83,7 @@ for i in range(1, 100):
                         solarCurrent_data.append(current)
                         solarPower_data.append(power)
 
-
+                
                 # Plotting current/voltage and power/voltage graphs for single dataset
                 fig = plt.figure(j)
                 fig.subplots_adjust(hspace = 0.4, wspace = 0.4)
@@ -109,7 +112,7 @@ for i in range(1, 100):
 
                 # Shows the plot
                 plt.show(j)
-
+                
 
                 temp_data.append(temperature)
                 neff_data.append(max_efficiency)
@@ -118,11 +121,11 @@ for i in range(1, 100):
                 
                 print('Maximum efficiency for temperature %s is %s' %(temperature, max_efficiency))
                 print('V_pm = %s V and I_pm = %s A' % (voltage_efficiency, current_efficiency))
-                       
+
             except OSError:
                 continue
 
-
+        
         # Plotting linear line for maximum efficiency in temperature profile for one folder
         fig = plt.figure(i)
         fig.subplots_adjust(hspace = 0.4, wspace = 0.4)
@@ -140,7 +143,7 @@ for i in range(1, 100):
 
         # Shows the plot
         plt.show(i)
-
+        
 
     except OSError:
         continue
@@ -152,7 +155,7 @@ fig.subplots_adjust(hspace = 0.4, wspace = 0.4)
 fig.set_figheight(10)
 fig.set_figwidth(10)
 
-# Plot 1
+# Plot: Unclustered graph
 plt.subplot(1, 1, 1)
 plt.plot(temp_data, neff_data, 'o', color = 'red')
 #plt.title('Efficiency', fontsize = 10)
@@ -163,4 +166,33 @@ plt.axis([min(temp_data) - 1, max(temp_data) + 1, min(neff_data) - 0.1, max(neff
 
 # Shows the plot
 plt.show('efficiency')
+
+
+
+"""
+ For machine learning purpose a cluster format is going to be used in order to study the temperature shifts effect on solar cell efficinecy.
+"""
+
+# Model
+model = KMeans(n_clusters = 2)
+
+# Transforming two 1-dimensional arrays into one 2-dimensional array
+combined = np.column_stack((temp_data, neff_data)).T
+
+
+# Plots clustered graph of all the maximum solar cell efficiencies found in all the datasets
+fig = plt.figure('cluster')
+fig.subplots_adjust(hspace = 0.4, wspace = 0.4)
+fig.set_figheight(10)
+fig.set_figwidth(10)
+
+# Plot: lustered graph
+plt.subplot(1, 1, 1)
+plt.scatter(temp_data, neff_data, c = temp_data)
+plt.xlabel('T [$^o$C]', fontsize = 10)
+plt.ylabel('\u03B7$_{eff}$ [%]', fontsize = 10)
+plt.grid(True)
+plt.axis([min(temp_data) - 1, max(temp_data) + 1, min(neff_data) - 0.1, max(neff_data) + 0.1])
+
+plt.show('cluster')
 
