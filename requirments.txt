@@ -1,5 +1,6 @@
 Python verion 3
 
 Needed dependencies:
- - Matplotlib
- - Numpy
+ - matplotlib
+ - numpy
+ - sklearn
