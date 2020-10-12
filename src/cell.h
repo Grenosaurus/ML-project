@@ -53,7 +53,7 @@ public:
 
 			T = temperature(i);
 			
-			std::string directory = solar_file = "/Users/K‰ytt‰j‰/Documents/text_files/Solar_data/";
+			std::string directory = solar_file = "/Users/K√§ytt√§j√§/Documents/text_files/Solar_data/";
 			directory.append(std::to_string(i));
 
 			for (j = 0; j < T.size(); j++)
@@ -142,7 +142,7 @@ public:
 
 	void readFile(int i, int temperature, modelvector mvector)
 	{
-		std::string file = "/Users/K‰ytt‰j‰/Documents/text_files/Solar_data/";
+		std::string file = "/Users/K√§ytt√§j√§/Documents/text_files/Solar_data/";
 		file.append(std::to_string(i));
 		file.append("/");
 		file.append(std::to_string(temperature));
@@ -200,7 +200,7 @@ public:
 
 	void output(modelvector mvector)
 	{
-		std::ofstream output_str("Users/K‰ytt‰j‰/Documents/text_files/Solar_data/output.txt", std::ifstream::out | std::ifstream::app);
+		std::ofstream output_str("Users/K√§ytt√§j√§/Documents/text_files/Solar_data/output.txt", std::ifstream::out | std::ifstream::app);
 
 		int T_cell;
 		double n_max, P_max, I_max, V_max;
@@ -237,16 +237,16 @@ public:
 
 	void includeHeader()
 	{
-		std::ofstream output_str("Users/K‰ytt‰j‰/Documents/text_files/Solar_data/output.txt", std::ifstream::out | std::ifstream::app);
+		std::ofstream output_str("Users/K√§ytt√§j√§/Documents/text_files/Solar_data/output.txt", std::ifstream::out | std::ifstream::app);
 
-		output_str << "#Te" << " " << "n_eff" << " " << "P_max" << " " << "V_max" << " " << "I_max" << std::endl;
+		output_str << "#T_cell" << " " << "n_eff" << " " << "P_max" << " " << "V_max" << " " << "I_max" << std::endl;
 
 		//std::cout << "#Te" << " " << "n_eff" << " " << "P_max" << " " << "V_max" << " " << "I_max" << std::endl;
 	}
 
 	void includeFolder(int i)
 	{
-		std::ofstream output_str("Users/K‰ytt‰j‰/Documents/text_files/Solar_data/output.txt", std::ifstream::out | std::ifstream::app);
+		std::ofstream output_str("Users/K√§ytt√§j√§/Documents/text_files/Solar_data/output.txt", std::ifstream::out | std::ifstream::app);
 
 		output_str << "#" << i << std::endl;
 
