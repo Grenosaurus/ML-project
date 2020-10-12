@@ -19,8 +19,6 @@ int main()
 {
 	Cell cell;
 
-	std::string solar_file = "/Users/Käyttäjä/Documents/text_files/Solar_data/";
-
 	cell.filePath();
 
 	return 0;
