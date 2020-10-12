@@ -1,3 +1,6 @@
+#ifndef CELL_H
+#define CELL_H
+
 /*
  Program generates a model vector that stores wanted values into it (Made: Jauaries).
 */
@@ -226,3 +229,5 @@ public:
 	}
 
 };
+
+#endif // !CELL_H
