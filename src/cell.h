@@ -19,15 +19,14 @@
 
 
 // Model Vector
-
 typedef std::vector<std::array<double, 5>> modelvector;
 /*
  Model vector that stores allteh necessary inputs from solar cell datasets
    - T_cell (cell temperature read from folder name)
-   - V_pm
-   - I_pm
-   - P_pm (maximum power)
    - n_eff
+   - P_pm (Maximum power)
+   - V_pm (Voltage of maximum P_pm)
+   - I_pm (Current of maximum P_pm)
 */
 
 
@@ -52,21 +51,9 @@ public:
 			includeFolder(i);
 
 			T = temperature(i);
-			
-			std::string directory = solar_file = "/Users/Käyttäjä/Documents/text_files/Solar_data/";
-			directory.append(std::to_string(i));
 
 			for (j = 0; j < T.size(); j++)
 			{
-				std::string dicTemp = directory;
-				dicTemp.append("/");
-				dicTemp.append(std::to_string(T[j]));
-				dicTemp.append(".txt");
-
-				//std::ifstream dataset_str(dicTemp);
-
-				//std::cout << dicTemp << std::endl;
-
 				readFile(i, T[j], mvector);
 			}
 		}
@@ -162,7 +149,6 @@ public:
 
 		while (dataset_str >> V_pm >> I_pm)
 		{
-			//std::cout << V_pm << " " << I_pm << std::endl;
 
 			if (V_pm >= 0)
 			{
@@ -184,15 +170,6 @@ public:
 			values[4] = I_max;
 		}
 
-		/*
-		for (i = 0; i < values.size(); i++)
-		{
-			double x = values[i];
-
-			std::cout << x << " " << std::endl;
-		}
-		*/
-
 		mvector.push_back(values);
 
 		output(mvector);
@@ -213,7 +190,6 @@ public:
 			V_max = it[3];
 			I_max = it[4];
 
-			//std::cout << T_cell << " " << n_max << " " << P_max << " " << V_max << " " << I_max << std::endl;
 
 			output_str << T_cell << " " << n_max << " " << P_max << " " << V_max << " " << I_max << std::endl;
 		}
@@ -240,8 +216,6 @@ public:
 		std::ofstream output_str("Users/Käyttäjä/Documents/text_files/Solar_data/output.txt", std::ifstream::out | std::ifstream::app);
 
 		output_str << "#T_cell" << " " << "n_eff" << " " << "P_max" << " " << "V_max" << " " << "I_max" << std::endl;
-
-		//std::cout << "#Te" << " " << "n_eff" << " " << "P_max" << " " << "V_max" << " " << "I_max" << std::endl;
 	}
 
 	void includeFolder(int i)
@@ -249,8 +223,6 @@ public:
 		std::ofstream output_str("Users/Käyttäjä/Documents/text_files/Solar_data/output.txt", std::ifstream::out | std::ifstream::app);
 
 		output_str << "#" << i << std::endl;
-
-		//std::cout << "#" << i << std::endl;
 	}
 
 };
