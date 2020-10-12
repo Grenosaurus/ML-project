@@ -12,7 +12,7 @@ Also check that you have the needed datasets.
 
 Programs algorithms can be used for plotting other kind of datasets if wanted.
 
-src folder holds the soure code of C++ program that reads the dataset and generates a output file that consists of 5 different values forom each datasets found in the read datasets:
+src folder holds the soure code of C++ program that reads the dataset and generates a output file that consists of 5 different values from each datasets found in the read datasets:
  - T_cell -> solar cell temperature
  - n_eff -> efficiency at highest P_pm
  - P_max -> highest power, max(P_pm)
