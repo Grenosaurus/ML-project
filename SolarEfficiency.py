@@ -14,7 +14,7 @@ from sklearn.cluster import KMeans
 # Constant value
 light_intensity = 1000 # [W/m^2]
 A_cell = 0.81e-4 # [m^2]
-sunPower = light_intensity * A_cell
+sunPower = light_intensity * A_cell # [W]
 
 folder_number = temperature = 0
 
@@ -38,7 +38,7 @@ for i in range(1, 100):
             try:
                 temperature = j
                 
-                solarCell_datasets = '/Users/Käyttäjä/Documents/text_files/Solar_data/%s/%s.txt' % (folder_number, temperature)
+                solarCell_datasets = '../Documents/text_files/Solar_data/%s/%s.txt' % (folder_number, temperature)
                 
                 # Reading file
                 f = open(solarCell_datasets, 'r')
@@ -56,8 +56,8 @@ for i in range(1, 100):
                 for k in range(0, len(solar_in) - 1): # -1 is set hr'ere to read the full dataset as it gets error in the last empty lines
                     solar_line = solar_in[k].split(None, 2)
 
-                    voltage = float(solar_line[0]) # Solar cell voltage
-                    current = float(solar_line[1]) * (-1) # Solar cell current | Multiplying all the values with -1.
+                    voltage = float(solar_line[0]) # Solar cell voltage [V]
+                    current = float(solar_line[1]) * (-1) # Solar cell current [A] | Multiplying all the values with -1
                     
                     # Ignoring valus when the voltages is smaller than 0
                     if (voltage < 0):
@@ -69,8 +69,8 @@ for i in range(1, 100):
                         if (current < 0):
                             current = 0
 
-                        power = voltage * current
-                        solar_efficiency = power/sunPower # Efficiency
+                        power = voltage * current # [W]
+                        solar_efficiency = power/sunPower # Efficiency | Unitless
 
                         # Stores the maximum efficiency and the specific V_pm and I_pm of the efficiency
                         if (solar_efficiency > max_efficiency):
