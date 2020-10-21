@@ -18,3 +18,6 @@ src folder holds the soure code of C++ program that reads the dataset and genera
  - P_max -> highest power, max(P_pm)
  - V_max -> voltage of highest power
  - I_max -> current of highest power
+
+# Goal
+The goal of the project is to teach the machine learning model to estimate correct efficiency based on the given temperature.
