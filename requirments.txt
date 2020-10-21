@@ -1,3 +1,5 @@
 matplotlib
 numpy
 sklearn
+pyMC3
+multiprocess
