@@ -9,7 +9,7 @@ Program is runned in the following method after going to the folder where the pr
  - If Windows -> python .\solarEfficiency.py
  - If Linux -> python3 solarEfficiency.py
 
-Also check that you have the needed datasets. Dependencies used by the python program can be found in requirments.txt file.
+Also check that you have the needed datasets and dependencies. Packets and libraries used by the ML program can be found in requirments.txt file.
 
 Programs algorithms can be used for plotting other kind of datasets if wanted.
 
