@@ -21,8 +21,3 @@ src folder holds the soure code of C++ program that reads the dataset and genera
 
 # Goal
 The goal of the project is to teach the machine learning model to estimate maximum efficiency of the solar cell, n_eff, based on the cell's temperature, T_cell.
-
-# Contributers
-Jauaries
-Imran
-Mario
