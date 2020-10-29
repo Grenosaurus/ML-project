@@ -8,7 +8,7 @@ Program is called by selecting first correct directory and correctly named datas
 Program is runned in the following method after going to the folder where the program is in your OS shell:
  - If Windows -> python .\solarEfficiency.py
  - If Linux -> python3 solarEfficiency.py
-Also check that you have the needed datasets.
+Also check that you have the needed datasets. Dependencies used by the python program can be found in requirments.txt file.
 
 Programs algorithms can be used for plotting other kind of datasets if wanted.
 
@@ -18,6 +18,7 @@ src folder holds the soure code of C++ program that reads the dataset and genera
  - P_max -> highest power, max(P_pm)
  - V_max -> voltage of highest power
  - I_max -> current of highest power
+
 
 # Goal
 The goal of the project is to teach the machine learning model to estimate maximum efficiency of the solar cell, n_eff, based on the cell's temperature, T_cell.
