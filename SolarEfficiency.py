@@ -7,6 +7,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pymc3 as pm
+import arviz as az
+import seaborn as sns
 
 from multiprocessing import freeze_support
 from sklearn.linear_model import LinearRegression
@@ -14,18 +16,18 @@ from sklearn.linear_model import LinearRegression
 
 # Constant value
 light_intensity = 1000 # [W/m^2]
-A_cell = 0.81e-4 # [m^2]
+A_cell = 0.25e-4 # [m^2]
 sunPower = light_intensity * A_cell # Power of the Sun light [W]
+folder_number = temperature = 0 # Definning the folder and temperature number before the program
 
-folder_number = temperature = 0
 
 # Empty list for storing temperature and efficiency
 temp_data = []
 neff_data = []
 folder_data = []
 
-# Folders
-for i in range(1, 100):
+# Folders | Ignoring the last 5 corrupted files
+for i in range(0, 10):
     # Checking if the specific folder is found in the solar cell dataset directory
     try:
         folder_number = i
@@ -35,7 +37,7 @@ for i in range(1, 100):
         folderEfficinecy_data = []
         
         # Temperature
-        for j in range(25, 100):
+        for j in range(0, 100):
             # For checking if the specific temperature file can be found in the folder
             try:
                 temperature = j
@@ -47,15 +49,10 @@ for i in range(1, 100):
                 solar_in = f.readlines()
                 f.close()
                 
-                # Empty list for storing voltage, current and power
-                solarVoltage_data = []
-                solarCurrent_data = []
-                solarPower_data = []
-                
                 max_efficiency = voltage_efficiency = current_efficiency = power_efficiency = 0
                 
                 # Splitting the datasets values to their specific variables
-                for k in range(0, len(solar_in) - 1): # -1 is set hr'ere to read the full dataset as it gets error in the last empty lines
+                for k in range(0, len(solar_in) - 1): # -1 is set here to read the full dataset as it gets error in the last empty lines
                     solar_line = solar_in[k].split(None, 2)
 
                     voltage = float(solar_line[0]) # Solar cell voltage [V]
@@ -81,142 +78,44 @@ for i in range(1, 100):
                             power_efficiency = power
                             max_efficiency = solar_efficiency
 
-                        # Appending values into empty list
-                        solarVoltage_data.append(voltage)
-                        solarCurrent_data.append(current)
-                        solarPower_data.append(power)
-
-
-                # Plotting current/voltage and power/voltage graphs for single dataset
-                fig = plt.figure(j)
-                fig.subplots_adjust(hspace = 0.4, wspace = 0.4)
-                fig.set_figheight(10)
-                fig.set_figwidth(10)
-
-                # Plot: Current as voltage profile
-                plt.subplot(1, 2, 1)
-                plt.plot(solarVoltage_data, solarCurrent_data, '-o', color = 'red')
-                plt.plot(voltage_efficiency, current_efficiency, 'o', color = 'black')
-                plt.title('Current & Voltage curve', fontsize = 10)
-                plt.xlabel('Voltage $[V]$', fontsize = 10)
-                plt.ylabel('Current $[A]$', fontsize = 10)
-                plt.grid(True)
-                plt.axis([min(solarVoltage_data), max(solarVoltage_data), min(solarCurrent_data), max(solarCurrent_data) + 0.01])
-
-                # Plot: Power as voltage function
-                plt.subplot(1, 2, 2)
-                plt.plot(solarVoltage_data, solarPower_data, '-o', color = 'green')
-                plt.plot(voltage_efficiency, power_efficiency, 'o', color = 'black')
-                plt.title('Power', fontsize = 10)
-                plt.xlabel('Voltage $[V]$', fontsize = 10)
-                plt.ylabel('Power $[W]$', fontsize = 10)
-                plt.grid(True)
-                plt.axis([min(solarVoltage_data), max(solarVoltage_data), min(solarPower_data), max(solarPower_data) + 0.01])
-
-                # Shows the plot
-                plt.show(j)
-                
-
                 # Appending values into empty list
                 folder_data.append(folder_number)
                 temp_data.append(temperature)
                 neff_data.append(max_efficiency)
-                folderTemp_data.append(temperature) # For single folder
-                folderEfficinecy_data.append(max_efficiency) # For single folder
-                
-                print('Maximum efficiency for temperature %s is %s' %(temperature, max_efficiency))
-                print('V_pm = %s V and I_pm = %s A' % (voltage_efficiency, current_efficiency))
                 
             except OSError:
                 continue
 
-        
-        # Plotting linear line for maximum efficiency in temperature profile for one folder
-        fig = plt.figure(i)
-        fig.subplots_adjust(hspace = 0.4, wspace = 0.4)
-        fig.set_figheight(10)
-        fig.set_figwidth(10)
-
-        # Plot: Efficiency as temperature function
-        plt.subplot(1, 1, 1)
-        plt.plot(folderTemp_data, folderEfficinecy_data, 'o', color = 'red')
-        plt.plot([min(folderTemp_data), max(folderTemp_data)], [max(folderEfficinecy_data), min(folderEfficinecy_data)], color = 'blue')
-        plt.xlabel('T [$^o$C]', fontsize = 10)
-        plt.ylabel('\u03B7$_{eff}$ [%]', fontsize = 10)
-        plt.grid(True)
-        plt.axis([min(folderTemp_data) - 1, max(folderTemp_data) + 1, min(folderEfficinecy_data) - 0.1, max(folderEfficinecy_data) + 0.1])
-
-        # Shows the plot
-        plt.show(i)
-
-
     except OSError:
         continue
-
-
-# Plots unclustered graph of all the maximum solar cell efficiencies found in all the datasets
-fig = plt.figure('efficiency')
-fig.subplots_adjust(hspace = 0.4, wspace = 0.4)
-fig.set_figheight(10)
-fig.set_figwidth(10)
-
-# Plot: Unclustered graph
-plt.subplot(1, 1, 1)
-plt.plot(temp_data, neff_data, 'o', color = 'red')
-#plt.title('Efficiency', fontsize = 10)
-plt.xlabel('T [$^o$C]', fontsize = 10)
-plt.ylabel('\u03B7$_{eff}$ [%]', fontsize = 10)
-plt.grid(True)
-plt.axis([min(temp_data) - 1, max(temp_data) + 1, min(neff_data) - 0.1, max(neff_data) + 0.1])
-
-# Shows the plot
-plt.show('efficiency')
-
 
 """
  For machine learning purpose a cluster format is going to be used in order to study the temperature shifts effect on solar cell efficinecy.
 """
 
-# Transforming two 1-dimensional arrays into one 2-dimensional array
-combined = np.column_stack((folder_data, temp_data, neff_data)).T
-print(combined)
-
-
-# Plots clustered graph of all the maximum solar cell efficiencies found in all the datasets
-fig = plt.figure('cluster')
-fig.subplots_adjust(hspace = 0.4, wspace = 0.4)
-fig.set_figheight(10)
-fig.set_figwidth(10)
-
-# Plot: lustered graph
-plt.subplot(1, 1, 1)
-plt.scatter(temp_data, neff_data, c = folder_data)
-plt.legend()
-plt.xlabel('T [$^o$C]', fontsize = 10)
-plt.ylabel('\u03B7$_{eff}$ [%]', fontsize = 10)
-plt.grid(True)
-plt.axis([min(temp_data) - 1, max(temp_data) + 1, min(neff_data) - 0.1, max(neff_data) + 0.1])
-
-plt.show('cluster')
-
-
-# For linear regression model
 length_temperature = len(temp_data)
 length_efficiency = len(neff_data)
 
-rng = np.random.RandomState(1)
-x = np.array(length_temperature)
-y = np.array(length_efficiency)
-x = x.reshape(-1, 1)
-y = y.reshape(-1, 1)
+# Transforming two 1-dimensional arrays into one 2-dimensional array
+combined = np.column_stack((folder_data, temp_data, neff_data)).T
 
-plt.scatter(x, y)
+# Bayesian linear regression model
+x = np.array(temp_data) # Transforming appended data into a array
+y = np.array(neff_data) # Transforming appended data into a array
+z = np.array(folder_data) # Transforming appended data into a array
+x = x.reshape(-1, 1) # Reshaping the x-axis array
+y = y.reshape(-1, 1) # Reshaping the y-axis array
+z = z.reshape(-1, 1) # Reshaping the z-axis array
 
-print('Running on the PyMC3 v{}'.format(pm.__version__))
-basic_model =  pm.Model()
+#plt.scatter(x, y) # Unclustered graph
+#plt.scatter(x, y, c = z) # Clustered graph
+#plt.show() # Shows the plot
+
+print('Running on the PyMC3 v{}' .format(pm.__version__))
+basic_model = pm.Model()
 
 with basic_model as bm:
-    
+    # Priors
     alpha = pm.Normal('alpha', mu = 0, sd = 10)
     beta = pm.Normal('beta', mu  = 0, sd = 10)
     sigma = pm.HalfNormal('sigma', sd = 1)
@@ -225,24 +124,87 @@ with basic_model as bm:
     mu = alpha + beta * x
     
     # Likelihood in y axis
-    Y_likelihood = pm.Normal('Ylikelihood', mu = mu, sd = sigma, observed = y)
+    Y_likelihood = pm.Normal('Y_likelihood', mu = mu, sd = sigma, observed = y)
     
     if __name__ == '__main__':
         freeze_support()
-        trace = pm.sample(draws = 3000, model = bm)
-        pm.traceplot(trace)
-        
+        trace = pm.sample(draws = 3000, tune = 3000, discard_tuned_samples = False, model = bm)
+        #pm.traceplot(trace)
+
         print(pm.summary(trace).round(2))
-            
+
         # Normal linear regression with sklearn
         lm = LinearRegression()
         y_prediction = lm.fit(x, y).predict(x)
-        
+            
         # Plotting linear regression graphs
-        plt.scatter(x, y)
+        plt.scatter(x, y, c = z)
         plt.plot(x, y_prediction)
-        plt.legend(loc = 'upper left', frameon = False, title = 'Simple Linear Regression\n {} + {} * x'.format(round(lm.intercept_[0], 2), round(lm.coef_[0][0], 2)))
+        plt.legend(loc = 'upper left', frameon = False, title = 'Simple Linear Regression\n {} + {} * x' .format(round(lm.intercept_[0], 2), round(lm.coef_[0][0], 2)))
         plt.title('Linear Regression')
-        plt.axis([0.0, max(x) + 25.0, 0.0, 10.0])
-        plt.show()
-        
+        plt.xlabel('Temperature T [K]')
+        plt.ylabel('Coefficent n_{eff}')
+        plt.grid(True)
+        plt.axis([min(x) - 5.0, max(x) + 5.0, 0, max(y_prediction) + 2.0])
+        plt.show() # Shows the plot
+
+        # Plotting the traces
+        plt.plot(x, y, 'b.') # Plots blue dots in the figure
+
+        idx = range(0, len(trace['alpha']), 1)
+        alpha_m = trace['alpha'].mean()
+        beta_m = trace['beta'].mean()
+
+        # Appending the temperature array with the possible maximum and minimum
+        x = np.append(x, 200)
+        x = np.append(x, -100)
+        x = x.reshape(-1, 1) # Reshaping the x-axis array after the appending
+
+        plt.plot(x, trace['alpha'][idx] + trace['beta'][idx] * x, c = 'gray', alpha = 0.2) # Plots the gray line for definning the linear line for full dataset
+        plt.plot(x, alpha_m + beta_m * x, c = 'black', label = 'y = {:.2f} + {:.2f} * x'.format(alpha_m, beta_m)) # Plots the black linear line
+        plt.xlabel('$X$', fontsize = 15)
+        plt.ylabel('$Y$', fontsize = 15, rotation = 0)
+        plt.title('Traces')
+        plt.legend()
+        plt.show() # Shows the plot
+
+        pm.plots.plot_posterior(trace) # Posterior plots
+        pm.plots.forestplot(trace) # Forest plot
+        pm.plots.densityplot(trace) # Density plot
+        pm.plots.energyplot(trace) # Energy plots
+
+        # Sampling the data from the posterior chain
+        y_prediction = pm.sampling.sample_posterior_predictive(model = bm, trace = trace, samples = 500)
+        y_sample_posterior_predictive = np.asarray(y_prediction['Y_likelihood'])
+        _, ax = plt.subplots()
+        ax.hist([n.mean() for n in y_sample_posterior_predictive], bins = 19, alpha = 0.5)
+        ax.axvline(y.mean())
+        ax.set(title = 'Posterior predictive of the mean', xlabel = 'mean(x)', ylabel = 'Frequency')
+
+        # Reshaping and sorting the data
+        inds = x.ravel().argsort()
+        x_ord = x.ravel()[inds].reshape(-1)
+        dfp = np.percentile(y_sample_posterior_predictive, [2.5, 25, 50, 70, 97.5], axis = 0)
+        dfp = np.squeeze(dfp)
+        dfp = dfp[:, inds]
+
+        y_mean = y_sample_posterior_predictive.mean(axis = 0)
+        y_mean = y_mean[inds]
+
+        pal = sns.color_palette('Purples')
+        plt.rcParams['axes.facecolor'] = 'white'
+        plt.rcParams['axes.linewidth']  = 1.25
+        plt.rcParams['axes.edgecolor'] = '0.15'
+
+        # Defining the density plot
+        fig = plt.figure(dpi = 100)
+        ax = fig.add_subplot(111)
+        plt.scatter(x_ord, y, s = 10, label = 'observed')
+        ax.plot(x_ord, y_mean, c = pal[5], label = 'posterior mean', alpha = 0.5)
+        ax.plot(x_ord, dfp[2, :], alpha = 0.75, color = pal[3], label = 'posterior median')
+        ax.fill_between(x_ord, dfp[0, :], dfp[4, :], alpha = 0.5, color = pal[1], label = 'CR 95%')
+        ax.fill_between(x_ord, dfp[1, :], dfp[3, :], alpha = 0.4, color = pal[2], label = 'CR 50%')
+        ax.legend()
+        plt.legend(frameon = True)
+        plt.show() # Shows the plot
+     
