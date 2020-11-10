@@ -1,5 +1,5 @@
 # ML-project
-Machine Learning in Material Science project
+Machine Learning in Material Science course project
 
 This program generates multiple solar cell dataset graphs. Purpose of this program is to study the connection of solar cell temperature and solar cell efficiency.
 
