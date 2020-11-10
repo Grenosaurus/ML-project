@@ -1,5 +1,5 @@
 """
- Simple program for reading and plotting solar cell datasets (Made: Jauaries).
+ Machine learning model for estimating the best suitable solar cell coefficent value for a given temperature (Made: Jauaries).
 """
 
 # Python packets
