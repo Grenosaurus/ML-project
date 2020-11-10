@@ -3,3 +3,5 @@ numpy
 sklearn
 pyMC3
 multiprocess
+seaborn
+arviz
