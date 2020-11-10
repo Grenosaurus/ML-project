@@ -42,7 +42,7 @@ for i in range(0, 10):
             try:
                 temperature = j
                 
-                solarCell_datasets = '/Users/jauar/Documents/text_files/Solar_data/%s/%s.txt' % (folder_number, temperature)
+                solarCell_datasets = '../text_files/Solar_data/%s/%s.txt' % (folder_number, temperature)
                 
                 # Reading file
                 f = open(solarCell_datasets, 'r')
@@ -107,10 +107,6 @@ x = x.reshape(-1, 1) # Reshaping the x-axis array
 y = y.reshape(-1, 1) # Reshaping the y-axis array
 z = z.reshape(-1, 1) # Reshaping the z-axis array
 
-#plt.scatter(x, y) # Unclustered graph
-#plt.scatter(x, y, c = z) # Clustered graph
-#plt.show() # Shows the plot
-
 print('Running on the PyMC3 v{}' .format(pm.__version__))
 basic_model = pm.Model()
 
@@ -138,7 +134,7 @@ with basic_model as bm:
         y_prediction = lm.fit(x, y).predict(x)
             
         # Plotting linear regression graphs
-        plt.scatter(x, y, c = z)
+        plt.scatter(x, y, c = z) # Clustered graph
         plt.plot(x, y_prediction)
         plt.legend(loc = 'upper left', frameon = False, title = 'Simple Linear Regression\n {} + {} * x' .format(round(lm.intercept_[0], 2), round(lm.coef_[0][0], 2)))
         plt.title('Linear Regression')
