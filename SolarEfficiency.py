@@ -2,7 +2,6 @@
  Simple program for reading and plotting solar cell datasets (Made: Jauaries).
 """
 
-
 # Python packets
 import numpy as np
 import matplotlib.pyplot as plt
