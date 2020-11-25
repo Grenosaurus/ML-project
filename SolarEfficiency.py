@@ -39,7 +39,7 @@ for i in range(1, 10, 1):
         folderEfficinecy_data = []
 
         # Temperature
-        for j in range(0, 100):
+        for j in range(0, 100, 1):
             # For checking if the specific temperature file can be found in the folder
             try:
                 temperature = j
