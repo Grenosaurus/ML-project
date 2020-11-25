@@ -43,7 +43,7 @@ for i in range(1, 10, 1):
             try:
                 temperature = j
 
-                solarCell_datasets = '../Solar_data/%s/%s.txt' % (folder_number, temperature)
+                solarCell_datasets = '/Users/jauar/Documents/text_files/Solar_data/%s/%s.txt' % (folder_number, temperature)
 
                 # Reading file
                 f = open(solarCell_datasets, 'r')
@@ -131,9 +131,8 @@ with basic_model as bm:
         
         trace = pm.sample(draws = 10000, discard_tuned_samples = True, model = bm, cores = core)
         pm.traceplot(trace)
-        plt.show() # Shows the plot
-
         print(pm.summary(trace).round(2))
+        plt.show() # Shows the plot
 
         # Normal linear regression with sklearn
         lm = LinearRegression()
@@ -147,7 +146,7 @@ with basic_model as bm:
         plt.xlabel('Temperature T [$K$]')
         plt.ylabel('Coefficent n$_{eff}$')
         plt.grid(True)
-        plt.axis([min(x) - 5.0, max(x) + 5.0, 0, max(y_prediction) + 2.0])
+        plt.axis([min(x), max(x), min(y), max(y)])
         plt.show() # Shows the plot
 
         # Plotting the traces
@@ -168,6 +167,8 @@ with basic_model as bm:
         plt.ylabel('y', fontsize = 15, rotation = 0)
         plt.title('Traces')
         plt.legend()
+        plt.grid(True)
+        plt.axis([min(x), max(x), 0, 35])
         plt.show() # Shows the plot
         
         pm.plots.plot_posterior(trace) # Posterior plots
@@ -179,10 +180,13 @@ with basic_model as bm:
         # Sampling the data from the posterior chain
         y_prediction = pm.sampling.sample_posterior_predictive(model = bm, trace = trace, samples = 500)
         y_sample_posterior_predictive = np.asarray(y_prediction['Y_likelihood'])
+        
+        # Plotting posterior prediction
         _, ax = plt.subplots()
         ax.hist([n.mean() for n in y_sample_posterior_predictive], bins = 19, alpha = 0.5)
         ax.axvline(y.mean())
         ax.set(title = 'Posterior predictive of the mean', xlabel = 'mean(x)', ylabel = 'Frequency')
+        plt.show() # Shows the plot
 
         # Removing the appended values from the x array for density graph
         x = np.delete(x, -1)
@@ -215,5 +219,7 @@ with basic_model as bm:
         ax.fill_between(x_ord, dfp[1, :], dfp[3, :], alpha = 0.4, color = pal[2], label = 'CR 50%')
         ax.legend()
         plt.legend(frameon = True)
+        plt.grid(True)
+        plt.axis([min(x_ord), max(x_ord), 0, max(y) + 5])
         plt.show() # Shows the plot
         
