@@ -20,6 +20,7 @@ from sklearn.linear_model import LinearRegression
 light_intensity = 1000 # [W/m^2]
 A_cell = 0.25e-4 # [m^2]
 sunPower = light_intensity * A_cell # Power of the Sun light [W]
+
 folder_number = temperature = 0 # Definning the folder and temperature number before the program
 
 # Empty list for storing temperature and efficiency
