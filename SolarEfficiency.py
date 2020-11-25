@@ -16,7 +16,7 @@ from multiprocessing import freeze_support
 from sklearn.linear_model import LinearRegression
 
 
-# Constant value
+# Constants
 light_intensity = 1000 # [W/m^2]
 A_cell = 0.25e-4 # [m^2]
 sunPower = light_intensity * A_cell # Power of the Sun light [W]
