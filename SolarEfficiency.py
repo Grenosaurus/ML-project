@@ -43,7 +43,7 @@ for i in range(1, 10, 1):
             try:
                 temperature = j
 
-                solarCell_datasets = '/Users/jauar/Documents/text_files/Solar_data/%s/%s.txt' % (folder_number, temperature)
+                solarCell_datasets = '../Solar_data/%s/%s.txt' % (folder_number, temperature)
 
                 # Reading file
                 f = open(solarCell_datasets, 'r')
@@ -127,7 +127,7 @@ with basic_model as bm:
     if __name__ == '__main__':
         freeze_support() # Avoiding the RuntimeError of the multiprocessed program
 
-        core = 1 # Amount of CPU cores, for trying to avoid Ctrl-C event
+        core = 1 # Amount of CPU cores, for avoiding Ctrl-C event
         
         trace = pm.sample(draws = 10000, discard_tuned_samples = True, model = bm, cores = core)
         pm.traceplot(trace)
