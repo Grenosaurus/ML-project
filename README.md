@@ -20,6 +20,8 @@ src folder holds the soure code of C++ program that reads the dataset and genera
  - V_max -> voltage of highest power
  - I_max -> current of highest power
 
+NOTE: For operating the program in Linux based OS, you must comment or remove 'freeze_support()' from the script.
+
 
 # Goal
 The goal of the project is to teach the machine learning model to estimate maximum efficiency of the solar cell, n_eff, based on the cell's temperature, T_cell.
