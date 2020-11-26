@@ -20,7 +20,7 @@ src folder holds the soure code of C++ program that reads the dataset and genera
  - V_max -> voltage of highest power
  - I_max -> current of highest power
 
-NOTE: For operating the program in Linux based OS, you must comment or remove 'freeze_support()' from the script.
+NOTE: For operating the program in Linux based OS, you must comment or remove 'freeze_support()' from the script (also explained in the script itself).
 
 
 # Goal
