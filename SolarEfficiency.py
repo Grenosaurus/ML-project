@@ -11,6 +11,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 import math
+import sys
 
 from multiprocessing import freeze_support
 from sklearn.linear_model import LinearRegression
@@ -92,11 +93,21 @@ for i in range(1, 10, 1):
         continue
 
 """
- For machine learning purpose a cluster format is going to be used in order to study the temperature shifts effect on solar cell coefficiency.
+ For machine learning purpose a cluster format is going to be used in order to study the temperature shifts effect on solar cell efficinecy. Goal 
+ is to teach the model to estimate and return a coefficent n_eff value when the user gives a temperature T_cell.
 """
 
 length_temperature = len(temp_data)
 length_efficiency = len(neff_data)
+
+# Checking the lengths of the arrays are macthing to each other
+if(length_temperature != length_efficiency):
+    print('Length of the arrays do not match!')
+    sys.exit() # Breaks the code and stops the system from proceding if the condition of 'if' is TRUE
+
+else:
+    print('Length of temperature and efficiency array: %s, %s' % (length_temperature, length_efficiency))
+
 
 # Transforming two 1-dimensional arrays into one 2-dimensional array
 combined = np.column_stack((folder_data, temp_data, neff_data)).T
@@ -109,9 +120,15 @@ x = x.reshape(-1, 1) # Reshaping the x-axis array
 y = y.reshape(-1, 1) # Reshaping the y-axis array
 z = z.reshape(-1, 1) # Reshaping the z-axis array
 
-print('Running on the PyMC3 v{}' .format(pm.__version__))
+"""
+ Program takes more time depending on the thread uses of memory. Currently the program has some unnecessary momory leaks happeing as teh program 
+ runs the PyMC3 module.
+"""
+
+print('Running on the PyMC3 v{}' .format(pm.__version__)) # Prints the model of pyMC3
 basic_model = pm.Model()
 
+# Bayesian approach with pyMC3
 with basic_model as bm:
     # Priors starting from the middle of the points
     alpha = pm.Normal('alpha', mu = 0, sd = 5) # Too large mu value will cause the program to overflow | Maybe crash the system
@@ -121,16 +138,20 @@ with basic_model as bm:
     # Deterministics
     mu = alpha + beta * x
 
-    # Likelihood in y axis
+    # Likelihood
     Y_likelihood = pm.Normal('Y_likelihood', mu = mu, sd = sigma, observed = y)
 
     # Guarding the multiprocessed program
     if __name__ == '__main__':
-        freeze_support() # Avoiding the RuntimeError of the multiprocessed program
+        freeze_support() # For multi-platform shared-memory programming and avoiding the RuntimeError of the multiprocessed program
+      
+        """
+         In linux laptops comment the 'freeze_support()' for operating the program.
+        """
 
         core = 1 # Amount of CPU cores, for avoiding 'Ctrl-C' event
         
-        trace = pm.sample(draws = 10000, discard_tuned_samples = True, model = bm, cores = core)
+        trace = pm.sample(draws = 10000, discard_tuned_samples = True, model = bm, cores = core) # Sampler
         pm.traceplot(trace)
         print(pm.summary(trace).round(2))
         plt.show() # Shows the plot
@@ -190,8 +211,8 @@ with basic_model as bm:
         plt.show() # Shows the plot
 
         # Removing the appended values from the x array for density graph
-        x = np.delete(x, -1)
-        x = np.delete(x, -1)
+        x = np.delete(x, -1) # Deleting MIN
+        x = np.delete(x, -1) # Deleting MAX
         x = x.reshape(-1, 1) # Reshaping the x-axis array after the deletion of the values
 
         # Reshaping and sorting the data
