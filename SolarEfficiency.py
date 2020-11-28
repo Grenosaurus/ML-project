@@ -121,7 +121,7 @@ y = y.reshape(-1, 1) # Reshaping the y-axis array
 z = z.reshape(-1, 1) # Reshaping the z-axis array
 
 """
- Program takes more time depending on the thread uses of memory. Currently the program has some unnecessary momory leaks happeing as teh program 
+ Program takes more time depending on the thread uses of memory. Currently the program has some unnecessary memory leaks happening as the program 
  runs the PyMC3 module.
 """
 
@@ -131,10 +131,14 @@ basic_model = pm.Model()
 # Bayesian approach with pyMC3
 with basic_model as bm:
     # Priors starting from the middle of the points
-    alpha = pm.Normal('alpha', mu = 0, sd = 5) # Too large mu value will cause the program to overflow | Maybe crash the system
+    alpha = pm.Normal('alpha', mu = 0, sd = 5)
     beta = pm.Normal('beta', mu  = 0, sd = 0.1)
     sigma = pm.HalfNormal('sigma', sd = 1)
 
+    """
+     Too large mu value will cause the program to overflow. This may crash the operating system fully.
+    """
+    
     # Deterministics
     mu = alpha + beta * x
 
@@ -152,7 +156,7 @@ with basic_model as bm:
         core = 1 # Amount of CPU cores, for avoiding 'Ctrl-C' event
         
         trace = pm.sample(draws = 10000, discard_tuned_samples = True, model = bm, cores = core) # Sampler
-        pm.traceplot(trace)
+        pm.traceplot(trace) # Trace plots for the prior variations
         print(pm.summary(trace).round(2))
         plt.show() # Shows the plot
 
@@ -161,8 +165,8 @@ with basic_model as bm:
         y_prediction = lm.fit(x, y).predict(x)
 
         # Plotting linear regression graphs
-        plt.scatter(x, y, c = z)
-        plt.plot(x, y_prediction)
+        plt.scatter(x, y, c = z) # Cluster graph for the data | Colouring based on the folder number
+        plt.plot(x, y_prediction) # Linear regression line
         plt.legend(loc = 'upper left', frameon = False, title = 'Simple Linear Regression\ny = {} + {} * x' .format(round(lm.intercept_[0], 2), round(lm.coef_[0][0], 2)))
         plt.title('Linear Regression')
         plt.xlabel('Temperature T [$K$]')
@@ -184,7 +188,7 @@ with basic_model as bm:
         x = x.reshape(-1, 1) # Reshaping the x-axis array after the appending
 
         plt.plot(x, trace['alpha'][idx] + trace['beta'][idx] * x, c = 'gray', alpha = 0.2) # Plots the gray line for definning the linear line for full dataset
-        plt.plot(x, alpha_m + beta_m * x, c = 'black', label = 'y = {:.2f} + {:.2f} * x' .format(alpha_m, beta_m)) # Plots the black linear line
+        plt.plot(x, alpha_m + beta_m * x, c = 'black', label = 'y = {:.2f} + {:.2f} * x' .format(alpha_m, beta_m)) # Bayesian linear regression
         plt.xlabel('x', fontsize = 15)
         plt.ylabel('y', fontsize = 15, rotation = 0)
         plt.title('Traces')
