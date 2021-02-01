@@ -32,7 +32,7 @@ for i in range(0, 5, 1):
     try:
         cell = i
 
-        solarCell_datasets = 'C:/Users/jauar/Documents/text_files/Solar_data/Degrees/60/0/EL01_02_0%s_8mar' % (cell)
+        solarCell_datasets = '../Documents/text_files/Solar_data/Degrees/60/0/EL01_02_0%s_8mar' % (cell)
 
         # Reading file
         f = open(solarCell_datasets, 'r')
