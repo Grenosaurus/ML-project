@@ -26,6 +26,8 @@ sunPower = light_intensity * A_cell # Power of the Sun light [W]
 
 efficiencyData = cellData = []
 
+
+# TODO: Expand the program for read more than 5 files!
 for i in range(0, 5, 1):
     try:
         cell = i
