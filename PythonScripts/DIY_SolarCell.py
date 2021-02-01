@@ -70,6 +70,4 @@ for i in range(0, 5, 1):
     except OSError:
         continue
 
-print(cellData)
-print(efficiencyData)
 
