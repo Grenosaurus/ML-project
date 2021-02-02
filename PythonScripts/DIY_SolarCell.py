@@ -45,7 +45,7 @@ for measurement in range(0, 6, 1):
                     # Checking if the cell number is found in the solar cell file name
                     try:
                         # File path
-                        solarCell_datasets = 'C:/Users/jauar/Documents/text_files/Solar_data/Degrees/%s/%s/EL0%s_0%s_0%s_8mar' % (temperature, hour, measurement, plate, cell)
+                        solarCell_datasets = '../text_files/Solar_data/Degrees/%s/%s/EL0%s_0%s_0%s_8mar' % (temperature, hour, measurement, plate, cell)
 
                         # Reading file
                         f = open(solarCell_datasets, 'r')
