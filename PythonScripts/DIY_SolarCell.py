@@ -33,6 +33,12 @@ hourData = []
 visibilityData = []
 
 
+"""
+ The following method for reading all the data files is not recomended as it is time consuming and affects systems memory drastically
+ TODO: If possible change the method for somewthing more system friendlier method
+"""
+
+
 # Hour
 for hour in range(0, 145, 1):
     filePath_hour = '%s/%s' % (filePath, hour)
@@ -293,13 +299,18 @@ for hour in range(0, 145, 1):
     except OSError:
         continue
 
-
-measurementHour = np.array(hourData) # Transforming appended data into a array
-cellPlateNumber = np.array(moduleNumberData) # Transforming appended data into a array
-measurementCellNumber = np.array(cellNumberData) # Transforming appended data into a array
-maxEfficiency = np.array(efficiencyData) # Transforming appended data into a array
+# Transforming appended data into a array
+measurementHour = np.array(hourData)
+cellPlateNumber = np.array(moduleNumberData)
+measurementCellNumber = np.array(cellNumberData)
+maxEfficiency = np.array(efficiencyData)
 VisibilityColor = np.array(visibilityData)
 
+# Reshaping the arrays
+x = measurementHour.reshape(-1, 1)
+y = maxEfficiency.reshape(-1, 1)
+z = VisibilityColor.reshape(-1, 1)
 
-plt.scatter(measurementHour, maxEfficiency, c = VisibilityColor) # Cluster graph for the data | Colouring based on the folder number
+
+plt.scatter(x, y, c = z) # Cluster graph for the data | Colouring based on the folder number
 plt.show()
