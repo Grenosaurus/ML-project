@@ -55,31 +55,35 @@ for i in range(1, 10, 1):
                 max_efficiency = voltage_efficiency = current_efficiency = power_efficiency = 0
 
                 # Splitting the datasets values to their specific variables
-                for k in range(0, len(solar_in) - 1): # -1 is set here to read the full dataset as it gets error in the last empty lines
-                    solar_line = solar_in[k].split(None, 2)
+                for k in range(0, len(solar_in)): # -1 is set here to read the full dataset as it gets error in the last empty lines
+                    try:
+                        solar_line = solar_in[k].split(None, 2)
 
-                    voltage = float(solar_line[0]) # Solar cell voltage [V]
-                    current = float(solar_line[1]) * (-1) # Solar cell current [A] | Multiplying all the values with -1 for changinh their direction
+                        voltage = float(solar_line[0]) # Solar cell voltage [V]
+                        current = float(solar_line[1]) * (-1) # Solar cell current [A] | Multiplying all the values with -1 for changinh their direction
 
-                    # Ignoring valus when the voltages is smaller than 0
-                    if (voltage < 0):
-                        voltage = 0
-                        current = 0
-
-                    else:
-                        # Converting current values that are smaller than 0 into 0.
-                        if (current < 0):
+                        # Ignoring valus when the voltages is smaller than 0
+                        if (voltage < 0):
+                            voltage = 0
                             current = 0
 
-                        power = voltage * current # [W]
-                        solar_efficiency = power/sunPower # Efficiency
+                        else:
+                            # Converting current values that are smaller than 0 into 0.
+                            if (current < 0):
+                                current = 0
 
-                        # Stores the maximum efficiency and the specific V_pm and I_pm of the efficiency
-                        if (solar_efficiency > max_efficiency):
-                            voltage_efficiency = voltage
-                            current_efficiency = current
-                            power_efficiency = power
-                            max_efficiency = solar_efficiency
+                            power = voltage * current # [W]
+                            solar_efficiency = power/sunPower # Efficiency
+
+                            # Stores the maximum efficiency and the specific V_pm and I_pm of the efficiency
+                            if (solar_efficiency > max_efficiency):
+                                voltage_efficiency = voltage
+                                current_efficiency = current
+                                power_efficiency = power
+                                max_efficiency = solar_efficiency
+
+                    except IndexError:
+                        continue
 
                 # Appending values into empty list
                 folder_data.append(folder_number)
@@ -93,7 +97,7 @@ for i in range(1, 10, 1):
         continue
 
 """
- For machine learning purpose a cluster format is going to be used in order to study the temperature shifts effect on solar cell efficinecy. Goal 
+ For machine learning purpose a cluster format is going to be used in order to study the temperature shifts effect on solar cell efficinecy. Goal
  is to teach the model to estimate and return a coefficent n_eff value when the user gives a temperature T_cell.
 """
 
@@ -121,7 +125,7 @@ y = y.reshape(-1, 1) # Reshaping the y-axis array
 z = z.reshape(-1, 1) # Reshaping the z-axis array
 
 """
- Program takes more time depending on the thread uses of memory. Currently the program has some unnecessary memory leaks happening as the program 
+ Program takes more time depending on the thread uses of memory. Currently the program has some unnecessary memory leaks happening as the program
  runs the PyMC3 module.
 """
 
@@ -138,7 +142,7 @@ with basic_model as bm:
     """
      Too large mu value will cause the program to overflow. This may crash the operating system fully.
     """
-    
+
     # Deterministics
     mu = alpha + beta * x
 
@@ -148,13 +152,13 @@ with basic_model as bm:
     # Guarding the multiprocessed program
     if __name__ == '__main__':
         freeze_support() # For multi-platform shared-memory programming and avoiding the RuntimeError of the multiprocessed program
-      
+
         """
          In linux laptops comment the 'freeze_support()' for operating the program.
         """
 
         core = 1 # Amount of CPU cores, for avoiding 'Ctrl-C' event
-        
+
         trace = pm.sample(draws = 10000, discard_tuned_samples = True, model = bm, cores = core) # Sampler
         pm.traceplot(trace) # Trace plots for the prior variations
         print(pm.summary(trace).round(2))
@@ -196,7 +200,7 @@ with basic_model as bm:
         plt.grid(True)
         plt.axis([min(x), max(x), 0, 35])
         plt.show() # Shows the plot
-        
+
         pm.plots.plot_posterior(trace) # Posterior plots
         pm.plots.forestplot(trace) # Forest plot
         pm.plots.densityplot(trace) # Density plot
@@ -206,7 +210,7 @@ with basic_model as bm:
         # Sampling the data from the posterior chain
         y_prediction = pm.sampling.sample_posterior_predictive(model = bm, trace = trace, samples = 500)
         y_sample_posterior_predictive = np.asarray(y_prediction['Y_likelihood'])
-        
+
         # Plotting posterior prediction
         _, ax = plt.subplots()
         ax.hist([n.mean() for n in y_sample_posterior_predictive], bins = 19, alpha = 0.5)
@@ -248,4 +252,4 @@ with basic_model as bm:
         plt.grid(True)
         plt.axis([min(x_ord), max(x_ord), 0, max(y) + 5])
         plt.show() # Shows the plot
-        
+
