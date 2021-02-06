@@ -24,7 +24,7 @@ A_cell = 0.25e-4 # [m^2]
 sunPower = light_intensity * A_cell # Power of the Sun light [W]
 
 #File directory
-filePath = 'C:/Users/jauar/Documents/text_files/Solar_data/Degrees/60'
+filePath = '../Solar_data/Degrees/60'
 
 efficiencyData = []
 cellNumberData = []
