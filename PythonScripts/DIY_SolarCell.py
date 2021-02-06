@@ -24,7 +24,7 @@ A_cell = 0.25e-4 # [m^2]
 sunPower = light_intensity * A_cell # Power of the Sun light [W]
 
 #File directory
-filePath = '../Solar_data/Degrees/60'
+filePath = 'C:/Users/jauar/Documents/text_files/Solar_data/Degrees/60'
 
 efficiencyData = []
 cellNumberData = []
@@ -293,12 +293,6 @@ for hour in range(0, 145, 1):
     except OSError:
         continue
 
-
-
-#print(hourData)
-#print(moduleNumberData)
-#print(cellNumberData)
-#print(efficiencyData)
 
 measurementHour = np.array(hourData) # Transforming appended data into a array
 cellPlateNumber = np.array(moduleNumberData) # Transforming appended data into a array
