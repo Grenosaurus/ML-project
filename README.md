@@ -1,4 +1,4 @@
-# ML-project
+# Machine Learning Project
 Machine Learning in Material Science course project
 
 Purpose of this program is to study the connection of solar cell temperature and solar cell efficiency for designing and teaching Machine Learning (ML) model for solar cell studies.
